@@ -10,9 +10,23 @@ public class CalculatorTests
         await Assert.That(result).IsEqualTo(3);
         await Assert.That(result).IsNotEqualTo(2);
     }
+
+    [Test]
+    public async Task TestTwo()
+    {
+        var result = AddThree(1, 2, 3);
+        
+        await Assert.That(result).IsEqualTo(6);
+        await Assert.That(result).IsNotEqualTo(5);
+    }
     
     private int AddTwo(int x, int y)
     {
         return x + y;
+    }
+    
+    private int AddThree(int x, int y, int z)
+    {
+        return x + y + z;
     }
 }
