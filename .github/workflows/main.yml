@@ -1,4 +1,4 @@
-name: Build and Test C# Project
+name: Build, Test, and Code Coverage
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0' # Use the required version of .NET SDK
+          dotnet-version: '8.0'
 
       # Restore dependencies
       - name: Restore Dependencies
@@ -31,6 +31,21 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      # Run tests
-      - name: Test
-        run: dotnet test --no-build --configuration Release --verbosity normal
+      # Run tests with coverage
+      - name: Test with Coverage
+        run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
+
+      # Convert coverage report to readable format (if needed)
+      - name: Convert Coverage Report
+        run: |
+          reportgenerator \
+          -reports:**/TestResults/*/coverage.cobertura.xml \
+          -targetdir:coverage-report \
+          -reporttypes:Html
+
+      # Upload coverage report artifact
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: coverage-report
