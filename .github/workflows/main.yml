@@ -35,8 +35,14 @@ jobs:
       - name: Test with Coverage
         run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
 
-      # Convert coverage report to readable format (if needed)
+      # Install ReportGenerator
+      - name: Install ReportGenerator
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      # Convert coverage report to HTML
       - name: Convert Coverage Report
+        env:
+          PATH: $PATH:/home/runner/.dotnet/tools
         run: |
           reportgenerator \
           -reports:**/TestResults/*/coverage.cobertura.xml \
